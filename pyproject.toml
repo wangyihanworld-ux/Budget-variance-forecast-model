@@ -1,0 +1,12 @@
+[project]
+name = "budget-variance-forecast-model"
+version = "0.1.0"
+description = "A sanitized budget variance and rolling forecast portfolio project"
+requires-python = ">=3.11"
+dependencies = [
+    "openpyxl>=3.1,<4",
+    "pandas>=2.0,<3",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
