@@ -25,11 +25,20 @@ class DataValidationError(ValueError):
     """输入数据不满足预算分析的数据契约。"""
 
 
-def validate_inputs(budget: pd.DataFrame, actual: pd.DataFrame) -> None:
-    """校验字段、主键、数值范围和预算实际键的一致性。"""
+def normalize_and_validate_inputs(
+    budget: pd.DataFrame, actual: pd.DataFrame
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """返回经过类型标准化且满足数据契约的预算表和实际表副本。"""
 
     _require_columns(budget, KEY_COLUMNS + BUDGET_VALUE_COLUMNS, "预算表")
     _require_columns(actual, KEY_COLUMNS + ACTUAL_VALUE_COLUMNS, "实际表")
+    if budget.empty or actual.empty:
+        empty_label = "预算表" if budget.empty else "实际表"
+        raise DataValidationError(f"{empty_label}不能为空")
+    budget = budget.copy()
+    actual = actual.copy()
+    _normalize_frame(budget, BUDGET_VALUE_COLUMNS, "预算表")
+    _normalize_frame(actual, ACTUAL_VALUE_COLUMNS, "实际表")
     _require_unique_keys(budget, "预算表")
     _require_unique_keys(actual, "实际表")
     _require_nonnegative(budget, BUDGET_VALUE_COLUMNS, "预算表")
@@ -41,6 +50,27 @@ def validate_inputs(budget: pd.DataFrame, actual: pd.DataFrame) -> None:
     if missing_budget:
         sample = sorted(missing_budget, key=str)[0]
         raise DataValidationError(f"实际表存在找不到预算的记录，例如：{sample}")
+    return budget, actual
+
+
+def validate_inputs(budget: pd.DataFrame, actual: pd.DataFrame) -> None:
+    """校验字段、主键、数值范围和预算实际键的一致性。"""
+
+    normalize_and_validate_inputs(budget, actual)
+
+
+def _normalize_frame(frame: pd.DataFrame, value_columns: list[str], label: str) -> None:
+    business_keys = frame[["business_unit", "product"]]
+    blank_keys = business_keys.isna() | business_keys.astype("string").apply(
+        lambda column: column.str.strip().eq("")
+    )
+    if blank_keys.any().any():
+        raise DataValidationError(f"{label}事业部和产品不能为空")
+    months = pd.to_datetime(frame["month"], errors="coerce")
+    if months.isna().any():
+        raise DataValidationError(f"{label}月份必须是有效日期")
+    frame["month"] = months.dt.to_period("M").dt.to_timestamp()
+    frame[value_columns] = frame[value_columns].apply(pd.to_numeric, errors="coerce")
 
 
 def _require_columns(frame: pd.DataFrame, columns: list[str], label: str) -> None:

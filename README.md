@@ -39,6 +39,7 @@
 - 自动生成前 1—12 个已发生月份的实际数据，默认生成前 6 个月；
 - 生成谨慎、基准和乐观三组完全合成的预测假设；
 - 校验必要字段、重复主键、负数或非数字以及实际记录缺少预算；
+- 标准化 Excel 常见的数字文本和月份日期，并拒绝空表、无效日期与空业务键；
 - 计算收入、变动成本、毛利和经营利润的预算差异；
 - 将经营利润差异拆分为总销量、产品结构、价格、单位变动成本和固定费用影响；
 - 检查各项利润影响是否与经营利润总差异严格勾稽。
@@ -55,6 +56,12 @@
 ```powershell
 python -m pip install -e .
 python -m budget_variance_forecast.demo
+```
+
+安装后也可以直接运行等价的命令：
+
+```powershell
+budget-forecast-demo
 ```
 
 指定输出目录：
@@ -75,6 +82,8 @@ python -m budget_variance_forecast.demo --output-dir .\my_demo_output
 ```powershell
 python -m unittest discover -s tests -v
 ```
+
+当前共 22 项自动化测试，覆盖输入契约、差异归因、利润桥勾稽、历史实际锁定、情景方向和工作簿可重开等关键规则。
 
 ## 目录
 

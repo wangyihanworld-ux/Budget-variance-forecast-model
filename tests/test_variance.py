@@ -156,6 +156,28 @@ class VarianceCalculationTest(unittest.TestCase):
                 one_row_actual(actual_quantity=0.0, actual_revenue=10.0),
             )
 
+    def test_excel_style_numeric_text_and_month_are_normalized(self) -> None:
+        budget = one_row_budget(budget_quantity="100", budget_unit_price="10")
+        actual = one_row_actual(actual_quantity="100", actual_revenue="1100")
+        budget["month"] = "2026-01-31"
+        actual["month"] = "2026-01-01"
+        result = calculate_variances(budget, actual)
+        self.assertAlmostEqual(result.detail.iloc[0]["price_profit_impact"], 100.0)
+
+    def test_invalid_month_is_rejected(self) -> None:
+        actual = one_row_actual()
+        actual["month"] = pd.Series(["不是日期"], dtype="object")
+        with self.assertRaisesRegex(DataValidationError, "有效日期"):
+            calculate_variances(one_row_budget(), actual)
+        blank_product = one_row_actual()
+        blank_product.loc[0, "product"] = "  "
+        with self.assertRaisesRegex(DataValidationError, "不能为空"):
+            calculate_variances(one_row_budget(), blank_product)
+
+    def test_empty_actual_is_rejected(self) -> None:
+        with self.assertRaisesRegex(DataValidationError, "实际表不能为空"):
+            calculate_variances(one_row_budget(), one_row_actual().iloc[0:0])
+
 
 if __name__ == "__main__":
     unittest.main()
