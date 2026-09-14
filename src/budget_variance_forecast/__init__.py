@@ -2,6 +2,7 @@
 
 from .synthetic import SyntheticDataset, build_synthetic_dataset
 from .forecast import ForecastResult, build_rolling_forecast
+from .reporting import DemoArtifacts, generate_demo_artifacts
 from .variance import VarianceResult, calculate_variances
 
 __version__ = "0.1.0"
@@ -9,8 +10,10 @@ __version__ = "0.1.0"
 __all__ = [
     "SyntheticDataset",
     "ForecastResult",
+    "DemoArtifacts",
     "VarianceResult",
     "build_synthetic_dataset",
     "build_rolling_forecast",
     "calculate_variances",
+    "generate_demo_artifacts",
 ]

@@ -8,6 +8,7 @@ __pycache__/
 output/
 reports/
 deliverables/
+.qa/
 *.xlsx
 *.xls
 *.csv
