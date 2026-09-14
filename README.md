@@ -2,7 +2,7 @@
 
 这是一个面向财务 BP 与经营分析场景的 Python 项目。项目将使用完全合成的数据，完成预算执行分析、差异归因、滚动预测、情景分析和 Excel 管理报告。
 
-> 当前状态：核心模型、三情景滚动预测、一键脱敏 Demo 和 Excel 管理报告已经完成；项目正在进行最终测试、文档和求职材料验收。
+> 当前状态：项目已完成。核心模型、三情景滚动预测、一键脱敏 Demo、Excel 管理报告、自动化测试和求职材料均已通过最终验收。
 
 ## 业务问题
 
@@ -82,7 +82,10 @@ python -m unittest discover -s tests -v
 src/budget_variance_forecast/   核心源码
 tests/                          自动化测试
 docs/                           数据字典与业务口径
+.github/workflows/              GitHub 自动化测试
 ```
+
+详细字段定义和归因顺序见 [数据字典与业务口径](docs/data-dictionary.md)。
 
 ## 作品集关联
 
