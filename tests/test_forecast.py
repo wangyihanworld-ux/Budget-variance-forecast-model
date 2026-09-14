@@ -63,6 +63,19 @@ class RollingForecastTest(unittest.TestCase):
             build_rolling_forecast(
                 self.dataset.budget, self.dataset.actual, duplicated
             )
+        blank = self.dataset.assumptions.copy()
+        blank.loc[0, "scenario"] = "  "
+        with self.assertRaisesRegex(DataValidationError, "不能为空"):
+            build_rolling_forecast(
+                self.dataset.budget, self.dataset.actual, blank
+            )
+
+    def test_numeric_text_scenario_factors_are_normalized(self) -> None:
+        assumptions = self.dataset.assumptions.astype(str)
+        result = build_rolling_forecast(
+            self.dataset.budget, self.dataset.actual, assumptions
+        )
+        self.assertEqual(len(result.detail), 48 * 3)
 
 
 if __name__ == "__main__":

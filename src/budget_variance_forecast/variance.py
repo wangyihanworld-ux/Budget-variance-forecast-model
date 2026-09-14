@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from .synthetic import KEY_COLUMNS
-from .validation import validate_inputs
+from .validation import normalize_and_validate_inputs
 
 
 @dataclass(frozen=True)
@@ -28,7 +28,7 @@ def calculate_variances(budget: pd.DataFrame, actual: pd.DataFrame) -> VarianceR
     项归属，因此会在项目报告中公开，而不会把它描述成唯一拆分方法。
     """
 
-    validate_inputs(budget, actual)
+    budget, actual = normalize_and_validate_inputs(budget, actual)
     detail = actual.merge(budget, on=KEY_COLUMNS, how="left", validate="one_to_one")
 
     detail["actual_unit_price"] = _safe_divide(

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from .synthetic import KEY_COLUMNS
-from .validation import DataValidationError, validate_inputs
+from .validation import DataValidationError, normalize_and_validate_inputs
 
 
 ASSUMPTION_COLUMNS = [
@@ -35,8 +35,8 @@ def build_rolling_forecast(
 ) -> ForecastResult:
     """保留截止月份内的实际值，仅对之后月份应用情景假设。"""
 
-    validate_inputs(budget, actual)
-    _validate_assumptions(assumptions)
+    budget, actual = normalize_and_validate_inputs(budget, actual)
+    assumptions = _normalize_and_validate_assumptions(assumptions)
     actual_through = pd.Timestamp(actual["month"].max())
     _validate_actual_periods_are_complete(budget, actual, actual_through)
 
@@ -91,15 +91,21 @@ def build_rolling_forecast(
     return ForecastResult(detail=detail, summary=summary, actual_through=actual_through)
 
 
-def _validate_assumptions(assumptions: pd.DataFrame) -> None:
+def _normalize_and_validate_assumptions(assumptions: pd.DataFrame) -> pd.DataFrame:
     missing = [column for column in ASSUMPTION_COLUMNS if column not in assumptions.columns]
     if missing:
         raise DataValidationError(f"预测假设表缺少字段：{', '.join(missing)}")
-    if assumptions["scenario"].isna().any() or assumptions["scenario"].duplicated().any():
+    blank_scenario = assumptions["scenario"].isna() | assumptions["scenario"].astype(
+        "string"
+    ).str.strip().eq("")
+    if blank_scenario.any() or assumptions["scenario"].duplicated().any():
         raise DataValidationError("预测情景名称不能为空或重复")
+    assumptions = assumptions.copy()
     factors = assumptions[ASSUMPTION_COLUMNS[1:]].apply(pd.to_numeric, errors="coerce")
     if (factors.isna() | (factors < 0)).any().any():
         raise DataValidationError("预测情景系数必须是非负数字")
+    assumptions[ASSUMPTION_COLUMNS[1:]] = factors
+    return assumptions
 
 
 def _validate_actual_periods_are_complete(
