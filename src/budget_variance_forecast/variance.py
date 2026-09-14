@@ -15,6 +15,7 @@ class VarianceResult:
     """预算差异明细、汇总与勾稽结果。"""
 
     detail: pd.DataFrame
+    profit_bridge: pd.DataFrame
     summary: pd.DataFrame
     reconciliation_difference: float
 
@@ -89,9 +90,15 @@ def calculate_variances(budget: pd.DataFrame, actual: pd.DataFrame) -> VarianceR
         detail["operating_profit_variance"] - detail["explained_profit_variance"]
     )
 
-    summary = _build_summary(detail)
-    difference = float(detail["reconciliation_difference"].sum())
-    return VarianceResult(detail=detail, summary=summary, reconciliation_difference=difference)
+    profit_bridge = _build_profit_bridge(detail)
+    summary = _build_summary(detail, profit_bridge)
+    difference = float(profit_bridge["reconciliation_difference"].sum())
+    return VarianceResult(
+        detail=detail,
+        profit_bridge=profit_bridge,
+        summary=summary,
+        reconciliation_difference=difference,
+    )
 
 
 def _safe_divide(numerator: pd.Series, denominator: pd.Series) -> pd.Series:
@@ -102,7 +109,58 @@ def _safe_divide(numerator: pd.Series, denominator: pd.Series) -> pd.Series:
     return result.fillna(0.0)
 
 
-def _build_summary(detail: pd.DataFrame) -> pd.DataFrame:
+def _build_profit_bridge(detail: pd.DataFrame) -> pd.DataFrame:
+    """按月份和事业部把总销量变化与产品结构变化分开。"""
+
+    rows: list[dict[str, object]] = []
+    for (month, business_unit), group in detail.groupby(
+        ["month", "business_unit"], sort=True, observed=True
+    ):
+        budget_quantity = float(group["budget_quantity"].sum())
+        actual_quantity = float(group["actual_quantity"].sum())
+        if budget_quantity <= 0:
+            raise ValueError("产品结构归因要求每个月和事业部的预算总销量大于 0")
+
+        budget_unit_margin = (
+            group["budget_unit_price"] - group["budget_unit_variable_cost"]
+        )
+        budget_mix = group["budget_quantity"] / budget_quantity
+        budget_average_margin = float((budget_mix * budget_unit_margin).sum())
+        expected_at_actual_volume = actual_quantity * budget_mix
+
+        volume_impact = (actual_quantity - budget_quantity) * budget_average_margin
+        mix_impact = float(
+            ((group["actual_quantity"] - expected_at_actual_volume) * budget_unit_margin).sum()
+        )
+        price_impact = float(group["price_profit_impact"].sum())
+        unit_cost_impact = float(group["unit_cost_profit_impact"].sum())
+        fixed_expense_impact = float(group["fixed_expense_profit_impact"].sum())
+        operating_profit_variance = float(group["operating_profit_variance"].sum())
+        explained = (
+            volume_impact
+            + mix_impact
+            + price_impact
+            + unit_cost_impact
+            + fixed_expense_impact
+        )
+        rows.append(
+            {
+                "month": month,
+                "business_unit": business_unit,
+                "operating_profit_variance": operating_profit_variance,
+                "volume_profit_impact": volume_impact,
+                "mix_profit_impact": mix_impact,
+                "price_profit_impact": price_impact,
+                "unit_cost_profit_impact": unit_cost_impact,
+                "fixed_expense_profit_impact": fixed_expense_impact,
+                "explained_profit_variance": explained,
+                "reconciliation_difference": operating_profit_variance - explained,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def _build_summary(detail: pd.DataFrame, profit_bridge: pd.DataFrame) -> pd.DataFrame:
     metrics = [
         ("预算收入", "budget_revenue"),
         ("实际收入", "actual_revenue"),
@@ -112,12 +170,24 @@ def _build_summary(detail: pd.DataFrame) -> pd.DataFrame:
         ("预算经营利润", "budget_operating_profit"),
         ("实际经营利润", "actual_operating_profit"),
         ("经营利润差异", "operating_profit_variance"),
-        ("数量对利润影响", "quantity_profit_impact"),
+        ("销量对利润影响", "volume_profit_impact"),
+        ("产品结构对利润影响", "mix_profit_impact"),
         ("价格对利润影响", "price_profit_impact"),
         ("单位成本对利润影响", "unit_cost_profit_impact"),
         ("固定费用对利润影响", "fixed_expense_profit_impact"),
         ("利润桥勾稽差异", "reconciliation_difference"),
     ]
-    return pd.DataFrame(
-        [{"metric": label, "amount": float(detail[column].sum())} for label, column in metrics]
+    detail_metrics = metrics[:8]
+    bridge_metrics = metrics[8:]
+    rows = [
+        {"metric": label, "amount": float(detail[column].sum())}
+        for label, column in detail_metrics
+    ]
+    rows.extend(
+        {
+            "metric": label,
+            "amount": float(profit_bridge[column].sum()),
+        }
+        for label, column in bridge_metrics
     )
+    return pd.DataFrame(rows)
