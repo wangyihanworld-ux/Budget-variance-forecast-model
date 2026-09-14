@@ -83,6 +83,59 @@ class VarianceCalculationTest(unittest.TestCase):
             + result.detail["price_revenue_impact"]
         )
         self.assertLess(revenue_bridge_difference.abs().max(), 1e-8)
+        self.assertLess(
+            result.profit_bridge["reconciliation_difference"].abs().max(), 1e-8
+        )
+
+    def test_mix_is_separated_from_total_volume(self) -> None:
+        budget = pd.DataFrame(
+            [
+                {
+                    "month": pd.Timestamp("2026-01-01"),
+                    "business_unit": "演示事业部",
+                    "product": "低毛利",
+                    "budget_quantity": 50.0,
+                    "budget_unit_price": 10.0,
+                    "budget_unit_variable_cost": 8.0,
+                    "budget_fixed_expense": 0.0,
+                },
+                {
+                    "month": pd.Timestamp("2026-01-01"),
+                    "business_unit": "演示事业部",
+                    "product": "高毛利",
+                    "budget_quantity": 50.0,
+                    "budget_unit_price": 10.0,
+                    "budget_unit_variable_cost": 2.0,
+                    "budget_fixed_expense": 0.0,
+                },
+            ]
+        )
+        actual = pd.DataFrame(
+            [
+                {
+                    "month": pd.Timestamp("2026-01-01"),
+                    "business_unit": "演示事业部",
+                    "product": "低毛利",
+                    "actual_quantity": 40.0,
+                    "actual_revenue": 400.0,
+                    "actual_variable_cost": 320.0,
+                    "actual_fixed_expense": 0.0,
+                },
+                {
+                    "month": pd.Timestamp("2026-01-01"),
+                    "business_unit": "演示事业部",
+                    "product": "高毛利",
+                    "actual_quantity": 60.0,
+                    "actual_revenue": 600.0,
+                    "actual_variable_cost": 120.0,
+                    "actual_fixed_expense": 0.0,
+                },
+            ]
+        )
+        bridge = calculate_variances(budget, actual).profit_bridge.iloc[0]
+        self.assertAlmostEqual(bridge["volume_profit_impact"], 0.0)
+        self.assertAlmostEqual(bridge["mix_profit_impact"], 60.0)
+        self.assertAlmostEqual(bridge["operating_profit_variance"], 60.0)
 
     def test_duplicate_key_is_rejected(self) -> None:
         actual = one_row_actual()
