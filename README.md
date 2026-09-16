@@ -1,5 +1,7 @@
 # 预算差异分析与滚动预测模型
 
+[![tests](https://github.com/wangyihanworld-ux/Budget-variance-forecast-model/actions/workflows/tests.yml/badge.svg)](https://github.com/wangyihanworld-ux/Budget-variance-forecast-model/actions/workflows/tests.yml)
+
 这是一个面向财务 BP 与经营分析场景的 Python 项目。项目将使用完全合成的数据，完成预算执行分析、差异归因、滚动预测、情景分析和 Excel 管理报告。
 
 > 当前状态：项目已完成。核心模型、三情景滚动预测、一键脱敏 Demo、Excel 管理报告、自动化测试和求职材料均已通过最终验收。
@@ -14,7 +16,7 @@
 - 距离年度目标还有多大缺口？
 - 乐观、基准和谨慎情景下，关键指标如何变化？
 
-## 计划交付
+## 项目交付
 
 - 完全脱敏的合成数据生成器
 - 预算与实际数据校验
