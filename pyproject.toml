@@ -8,6 +8,7 @@ version = "0.1.0"
 description = "A sanitized budget variance and rolling forecast portfolio project"
 requires-python = ">=3.11"
 dependencies = [
+    "numpy>=1.24,<3",
     "openpyxl>=3.1,<4",
     "pandas>=2.0,<3",
 ]

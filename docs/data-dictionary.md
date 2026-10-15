@@ -43,3 +43,7 @@
 ## 输入标准化与拒绝规则
 
 模型会把可转换的数字文本转成数值，并把日期统一到对应月份的第一天。空预算表、空实际表、无效日期、空事业部或产品、重复业务键、负数、非数字以及实际记录缺少对应预算时，模型会在计算前明确拒绝输入。
+
+
+## 2026-10-15 forecast review
+See [forecast-vintage review](forecast-review.md) for immutable version identifiers, origins, lead times, input hashes, missing actuals and signed error definitions.
