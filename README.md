@@ -1,5 +1,7 @@
 # 预算差异分析与滚动预测模型
 
+[English](README.en.md) · 中文
+
 [![tests](https://github.com/wangyihanworld-ux/Budget-variance-forecast-model/actions/workflows/tests.yml/badge.svg)](https://github.com/wangyihanworld-ux/Budget-variance-forecast-model/actions/workflows/tests.yml)
 
 这是一个面向财务 BP 与经营分析场景的 Python 项目。项目将使用完全合成的数据，完成预算执行分析、差异归因、滚动预测、情景分析和 Excel 管理报告。
@@ -91,7 +93,7 @@ python -m budget_variance_forecast.demo --output-dir .\my_demo_output
 python -m unittest discover -s tests -v
 ```
 
-当前共 22 项自动化测试，覆盖输入契约、差异归因、利润桥勾稽、历史实际锁定、情景方向和工作簿可重开等关键规则。
+当前共 28 项自动化测试，覆盖输入契约、差异归因、利润桥勾稽、历史实际锁定、情景方向和工作簿可重开等关键规则。
 
 ## 目录
 
@@ -121,3 +123,15 @@ docs/                           数据字典与业务口径
 - 年度经营利润目标使用全年预算经营利润，不代表真实公司的正式业绩目标。
 - 三种情景仅调整未来月份，已经发生月份保持实际值不变。
 - 情景分析是基于设定系数的条件模拟，不是因果推断、统计置信区间或业绩承诺。
+
+## 预测版本与事后复盘
+
+```powershell
+python -m budget_variance_forecast.review --output-dir forecast_review_output
+```
+
+生成3、6、9月三个合成版本，保存预测截止月、情景、输入哈希、假设及预测值，随后与全年合成实际进行复盘。同名版本拒绝覆盖，重跑演示请换新输出目录。
+
+输出 `vintages/`、`review_detail.csv`、`review_metrics.csv`。只评价当时尚未发生的月份；未取得实际值的月份标记为待复盘。按版本、情景、指标及提前期展示MAE、RMSE、Bias、WAPE；误差为预测减实际，正数表示高估。实际绝对值合计为0时WAPE留空。
+
+[复盘口径与示例](docs/forecast-review.md)。三个版本是用固定规则重建的合成演示，不是2026年真实签发的预测，也不证明模型已校准。当前28项测试覆盖核心计算与版本复盘。

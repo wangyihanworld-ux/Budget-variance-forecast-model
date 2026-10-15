@@ -1,0 +1,2 @@
+# Preserve exact bytes of checksummed demonstration forecasts across platforms.
+docs/review-example/**/*.csv -text

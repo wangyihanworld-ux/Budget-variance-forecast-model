@@ -1,0 +1,34 @@
+{
+  "version": "2026M03",
+  "as_of": "2026-03-01 00:00:00",
+  "sha256": "2ff0a88c73f06abfe86ae579cd6dd5b37256a5936782eef3d3b44da5bbd3dee6",
+  "provenance": "Reconstructed synthetic demonstration; not forecasts actually issued in 2026",
+  "inputs": {
+    "budget_sha256": "f3c9b798262e9fcf5236c7f794f23c1619c3ef9a7968efa4491b0754815e415d",
+    "actual_sha256": "71e511361ce15fda0a048bd551a7ddb29d87abeb33d1d1eb7902ec2244dbac59",
+    "assumptions": [
+      {
+        "scenario": "谨慎",
+        "quantity_factor": 0.97,
+        "price_factor": 0.99,
+        "unit_cost_factor": 1.03,
+        "fixed_expense_factor": 1.02
+      },
+      {
+        "scenario": "基准",
+        "quantity_factor": 1.0,
+        "price_factor": 1.0,
+        "unit_cost_factor": 1.0,
+        "fixed_expense_factor": 1.0
+      },
+      {
+        "scenario": "乐观",
+        "quantity_factor": 1.06,
+        "price_factor": 1.01,
+        "unit_cost_factor": 0.99,
+        "fixed_expense_factor": 1.0
+      }
+    ]
+  },
+  "error_convention": "forecast minus actual; positive means overforecast"
+}
