@@ -93,7 +93,7 @@ python -m budget_variance_forecast.demo --output-dir .\my_demo_output
 python -m unittest discover -s tests -v
 ```
 
-当前共 28 项自动化测试，覆盖输入契约、差异归因、利润桥勾稽、历史实际锁定、情景方向和工作簿可重开等关键规则。
+当前共 34 项自动化测试，覆盖输入契约、差异归因、利润桥勾稽、历史实际锁定、情景方向和工作簿可重开等关键规则。
 
 ## 目录
 
@@ -134,4 +134,17 @@ python -m budget_variance_forecast.review --output-dir forecast_review_output
 
 输出 `vintages/`、`review_detail.csv`、`review_metrics.csv`。只评价当时尚未发生的月份；未取得实际值的月份标记为待复盘。按版本、情景、指标及提前期展示MAE、RMSE、Bias、WAPE；误差为预测减实际，正数表示高估。实际绝对值合计为0时WAPE留空。
 
-[复盘口径与示例](docs/forecast-review.md)。三个版本是用固定规则重建的合成演示，不是2026年真实签发的预测，也不证明模型已校准。当前28项测试覆盖核心计算与版本复盘。
+[复盘口径与示例](docs/forecast-review.md)。三个版本是用固定规则重建的合成演示，不是2026年真实签发的预测，也不证明模型已校准。当前34项测试覆盖核心计算与版本复盘。
+
+## 2026-10-23 validation and benchmark update
+
+- All analysis entry points reject missing actual product keys through the actual cutoff; genuine zero activity must be entered explicitly. NaN, infinity and empty scenario tables are rejected.
+- Product-mix calculations assume comparable quantity units within each business unit. Synthetic fixed expenses are allocated equally across its two products; this is a demonstration convention, not a validated enterprise allocation basis.
+- Forecasts remain budget × stated scenario factors. They are not fitted machine-learning predictions.
+- `python -m budget_variance_forecast.baseline` produces `docs/baseline-results/` with a trailing-three-month run-rate benchmark and the existing scenarios on identical origins, target months and horizons. Synthetic vintages are reconstructed, not historically issued forecasts.
+- Evaluate individual horizons in `comparison_metrics.csv`; averaging displayed horizon scores is not a single pooled RMSE.
+
+
+## 2026年10月26日复核
+
+本轮新增功能、规则来源和适用限制见 [复核记录](docs/review-20261026.md)。实现与自动测试有AI辅助，不能代表本人独立编写、用户试用或企业采用。历史测试数属于当时版本，本轮结果见交付证据。
