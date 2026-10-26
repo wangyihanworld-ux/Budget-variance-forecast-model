@@ -18,3 +18,7 @@ forecast_review_output/
 public_case_output/
 !docs/review-example/**/*.csv
 !docs/public-case-results/*.csv
+
+.pytest_cache/
+pytest-cache-files-*/
+!docs/baseline-results/*.csv

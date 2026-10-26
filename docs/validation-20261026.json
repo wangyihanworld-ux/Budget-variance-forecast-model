@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-26",
+  "tests": 34,
+  "subtests": 0,
+  "exit_code": 0,
+  "command": "python -m pytest -q --tb=short -p no:cacheprovider",
+  "tested_code_commit": "6ed3a473e6f7eed9041d42929d49e33e89f3910b",
+  "source_sha256": {
+    "tests\\test_baseline.py": "ff92f69fb67d249547537e99674a19f2b33f72ba3b58b90a6e24b02c96af9ca7",
+    "tests\\test_forecast.py": "26420592165492f2b15a6064286f652a77791f8d33131bfc847fb3da317ddcd4",
+    "tests\\test_input_boundaries.py": "bfcfe7e545d3670bb4f697035d86991ce5ae33c16322982ff5a1e8965f7af0a4",
+    "tests\\test_reporting.py": "ef982a9afeb9f45b28aff48436c6f8c8cda39ffbbd0433abe70c7812cfbe59eb",
+    "tests\\test_review.py": "b72ff2b17c2bf0c69c26f8f1b52a15f1e3928d3b1a9f2c8eac08d01b2d7f5e0d",
+    "tests\\test_synthetic.py": "39685e790ca3f4335f972b1608c91c1d6604f7418d78c88bd0d8d47f1ce50690",
+    "tests\\test_variance.py": "d562d9fe77fc6c4f257c6b9cbb47a76a4f5e481bd1a0980c164c9ee5e961af87",
+    "src\\budget_variance_forecast\\baseline.py": "d5d4138bf9de447406a36de66b6633a14d764e64c24326b6b7f74a2f05cf952c",
+    "src\\budget_variance_forecast\\demo.py": "368c914a7461b1d19ba90b2f12972fe8f34484ceae5e4839c168f86ea0763d74",
+    "src\\budget_variance_forecast\\forecast.py": "077ebbea1092df6abc7fe5ba895728aeb615c3ebd573673bfef44cace10fc2d4",
+    "src\\budget_variance_forecast\\reporting.py": "1f17fa324b55e07bce0e566e8d18a4951042130b816411b0d6670c0be9f32548",
+    "src\\budget_variance_forecast\\review.py": "4068f7776883f9e15049d6e3a9a9344c45f9107053557be985ed3486c9466d49",
+    "src\\budget_variance_forecast\\synthetic.py": "01c3a7e5b98cad18008f118eaee4b18592d242051a44cbaae369afee91d95053",
+    "src\\budget_variance_forecast\\validation.py": "47ac768a73a14f863699debf45262d6ab9821370dd35e96b34002965986df82a",
+    "src\\budget_variance_forecast\\variance.py": "10b6ea45173db7be0f1b6a2e76d8584eba9905e62ee914c24f775c99c2a988dd",
+    "src\\budget_variance_forecast\\__init__.py": "e3cfd1c09894d4b58440507714533399bb89edd54541732f8ae7c85c1cf516ad"
+  },
+  "validation": "AI-assisted local validation; not remote CI or user acceptance",
+  "environment": "Windows Python 3.14; project .testenv or .warehouse-env; worktree TEMP"
+}

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import numpy as np
 import pandas as pd
 
 from .synthetic import KEY_COLUMNS
@@ -95,6 +96,8 @@ def _normalize_and_validate_assumptions(assumptions: pd.DataFrame) -> pd.DataFra
     missing = [column for column in ASSUMPTION_COLUMNS if column not in assumptions.columns]
     if missing:
         raise DataValidationError(f"预测假设表缺少字段：{', '.join(missing)}")
+    if assumptions.empty:
+        raise DataValidationError("预测假设表不能为空")
     blank_scenario = assumptions["scenario"].isna() | assumptions["scenario"].astype(
         "string"
     ).str.strip().eq("")
@@ -102,8 +105,8 @@ def _normalize_and_validate_assumptions(assumptions: pd.DataFrame) -> pd.DataFra
         raise DataValidationError("预测情景名称不能为空或重复")
     assumptions = assumptions.copy()
     factors = assumptions[ASSUMPTION_COLUMNS[1:]].apply(pd.to_numeric, errors="coerce")
-    if (factors.isna() | (factors < 0)).any().any():
-        raise DataValidationError("预测情景系数必须是非负数字")
+    if (~np.isfinite(factors) | (factors < 0)).any().any():
+        raise DataValidationError("预测情景系数必须是有限非负数字")
     assumptions[ASSUMPTION_COLUMNS[1:]] = factors
     return assumptions
 
