@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 from .synthetic import KEY_COLUMNS
@@ -50,6 +51,11 @@ def normalize_and_validate_inputs(
     if missing_budget:
         sample = sorted(missing_budget, key=str)[0]
         raise DataValidationError(f"实际表存在找不到预算的记录，例如：{sample}")
+    expected = budget.loc[budget["month"] <= actual["month"].max(), KEY_COLUMNS]
+    missing_actual = set(map(tuple, expected.itertuples(index=False, name=None))) - actual_keys
+    if missing_actual:
+        sample = sorted(missing_actual, key=str)[0]
+        raise DataValidationError(f"实际截止月份内存在缺失记录，例如：{sample}；真实零值必须显式提供")
     return budget, actual
 
 
@@ -88,8 +94,8 @@ def _require_unique_keys(frame: pd.DataFrame, label: str) -> None:
 
 def _require_nonnegative(frame: pd.DataFrame, columns: list[str], label: str) -> None:
     numeric = frame[columns].apply(pd.to_numeric, errors="coerce")
-    invalid = numeric.isna() | (numeric < 0)
+    invalid = ~np.isfinite(numeric) | (numeric < 0)
     if invalid.any().any():
         row_index, column_index = next(zip(*invalid.to_numpy().nonzero()))
         column = columns[column_index]
-        raise DataValidationError(f"{label}字段 {column} 存在空值、非数字或负数（行 {row_index + 2}）")
+        raise DataValidationError(f"{label}字段 {column} 存在空值、非有限数、非数字或负数（行 {row_index + 2}）")
