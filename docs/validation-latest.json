@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-27",
+  "tests": 34,
+  "subtests": 0,
+  "test_framework": "pytest",
+  "test_exit_code": 0,
+  "demo_exit_codes": {
+    "budget_variance_forecast.demo": 0,
+    "budget_variance_forecast.baseline": 0
+  },
+  "source_sha256_lf_normalized": {
+    "src/budget_variance_forecast/__init__.py": "787c4b357431862297b327ea4741f34a9e26ee308a7f437ba062b559add8230f",
+    "src/budget_variance_forecast/baseline.py": "d5d4138bf9de447406a36de66b6633a14d764e64c24326b6b7f74a2f05cf952c",
+    "src/budget_variance_forecast/demo.py": "5603822feb9c8e122ed7062a3f361adc181325876d59fb40aa0a37f2531d2615",
+    "src/budget_variance_forecast/forecast.py": "423d1a475cdb1797513375f8826a7557d1e48126842b3b70bdf40f2de2b8f646",
+    "src/budget_variance_forecast/reporting.py": "261e64757d3d780f1587cb77156a02086f7062a7fbb0519d83c513f4fbbc5cf4",
+    "src/budget_variance_forecast/review.py": "55ce2c088362d18b6956dbf9eefb7f373bba30ac0cfc6ca88fc4b6699820d421",
+    "src/budget_variance_forecast/synthetic.py": "5c7c9a6bb709e6dfc9c38b27a7764ad9bbfc3b0f7a7fc3da8a4d79d32de95921",
+    "src/budget_variance_forecast/validation.py": "ec1d9086dd5b8716ed826a79d668534fc5c62d5fec1f80b147b9dd38e517750a",
+    "src/budget_variance_forecast/variance.py": "236b274dcd811bea41219b382436f54cb59a536259433013659b9b880d168091",
+    "tests/test_baseline.py": "ff92f69fb67d249547537e99674a19f2b33f72ba3b58b90a6e24b02c96af9ca7",
+    "tests/test_forecast.py": "0b1b3f9f2ffa6be78dc228795bac8ae32d68c2ceda55ec1ea3edea1a7cdff172",
+    "tests/test_input_boundaries.py": "bfcfe7e545d3670bb4f697035d86991ce5ae33c16322982ff5a1e8965f7af0a4",
+    "tests/test_reporting.py": "7670d33ffc56f44ccd329bdf4cf55c2421dce74017dde10104a261f137b5d192",
+    "tests/test_review.py": "1a89a6a4d608fc0615e036f8e3510b0e0c0de96e4a5f19d47774e2badc403c4d",
+    "tests/test_synthetic.py": "1b6cceedce657e2e14c303031406dd490c587c6b0c49fd15947dbca0be91c654",
+    "tests/test_variance.py": "0270a0587cf42967db7d2db4e452025e3ba88585eb4f734e612c8def5aeebf13"
+  },
+  "limits": "AI-assisted local verification; not evidence of deployment, user acceptance or business outcomes."
+}

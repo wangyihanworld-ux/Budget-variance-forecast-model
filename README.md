@@ -1,5 +1,7 @@
 # 预算差异分析与滚动预测模型
 
+[运行与最新验证](docs/validation-latest.md)
+
 [English](README.en.md) · 中文
 
 [![tests](https://github.com/wangyihanworld-ux/Budget-variance-forecast-model/actions/workflows/tests.yml/badge.svg)](https://github.com/wangyihanworld-ux/Budget-variance-forecast-model/actions/workflows/tests.yml)
@@ -32,7 +34,6 @@
 - 基准、乐观、谨慎三种滚动预测情景
 - 管理层 Excel 报告与一键运行入口
 - 自动化测试和可复现 Demo
-- 项目完成后的简历更新与 STAR 面试手册
 
 ## 核心口径
 
